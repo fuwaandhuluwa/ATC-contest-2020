@@ -1,5 +1,5 @@
 import numpy as np
-from Point import Point
+from py.Point import Point
 
 
 class RandomMap:

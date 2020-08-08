@@ -1,17 +1,16 @@
 # main.py
 
-import numpy as np
 import matplotlib.pyplot as plt
 
 from matplotlib.patches import Rectangle
 
-import RoadMap
-from AStar import  AStar
-from Point import Point
+import py.RoadMap
+from py.AStar import AStar
+from py.Point import Point
 
 plt.figure(figsize=(5, 5))
 
-map = RoadMap.RandomMap()
+map = py.RoadMap.RandomMap()
 
 ax = plt.gca()
 ax.set_xlim([0, map.size])

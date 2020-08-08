@@ -6,3 +6,5 @@ class Point:
         self.x = x
         self.y = y
         self.cost = sys.maxsize
+        self.next = None
+        self.matched = False

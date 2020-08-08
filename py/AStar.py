@@ -2,7 +2,7 @@
 # Reference document https://zhuanlan.zhihu.com/p/54510444
 
 import numpy as np
-from Point import Point
+from py.Point import Point
 import time
 import sys
 from matplotlib.patches import Rectangle
