@@ -87,15 +87,15 @@ class AStar:
 
     # Distance to start point
     def gCost(self, current: Point, parent: Point):
-        return parent.cost + 1
+        return parent.g_cost + 1
 
     def hCost(self, current: Point, target: Point):
         dx = abs(current.x - target.x)
         dy = abs(current.y - target.y)
         return dx + dy
 
-    def fCost(self, current: Point, parent: Point, target: Point):
-        return self.gCost(current, parent) + self.hCost(current, target)
+    def fCost(self, current: Point, target: Point):
+        return current.g_cost + self.hCost(current, target)
 
     def isInOpenList(self, current: Point):
         for i in self.open_set:
@@ -124,8 +124,8 @@ class AStar:
         index = 0
         select_index = -1
         for i in self.open_set:
-            if i.cost < min_cost:
-                min_cost = i.cost
+            if i.f_cost < min_cost:
+                min_cost = i.f_cost
                 select_index = index
             index += 1
         return select_index
@@ -138,8 +138,10 @@ class AStar:
         return True
 
     def search(self, ax, plt, start: Point, target: Point):
-        start.cost = 0
+        start.f_cost = 0
+        start.g_cost = 0
         self.open_set.clear()
+        self.close_set.clear()
         self.open_set.append(start)
 
         rec = Rectangle((start.x, start.y), width=1, height=1, facecolor='b')
@@ -161,13 +163,15 @@ class AStar:
 
             next = self.roadMap[current.x][current.y].next
             if not self.isStartPoint(current, start):
-                if next is None and current.matched is False:
+                if next is None and current.matched is False or self.isTargetPoint(current, target):
                     return self.buildPath(current, start, ax, plt)
                 else:
                     # rec = Rectangle((next.x, next.y), 1, 1, color='c')
                     # ax.add_patch(rec)
                     # self.SaveImage(plt)
                     next.parent = current
+                    next.g_cost = current.g_cost + 1
+                    next.f_cost = self.fCost(next, target)
                     self.close_set.append(next)
             else:
                 next = current
@@ -188,7 +192,8 @@ class AStar:
             return  # Do nothing for visited point
         if not self.isInOpenList(current):
             current.parent = parent
-            current.cost = self.fCost(current, start, target)
+            current.g_cost = self.gCost(current, start)
+            current.f_cost = self.fCost(current, target)
             self.open_set.append(current)
             # print('Process Point [', current.x, ',', current.y, ']', ', cost: ', current.cost)
 

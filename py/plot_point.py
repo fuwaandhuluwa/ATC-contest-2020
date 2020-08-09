@@ -9,7 +9,9 @@ line = file.readline()
 x = []
 y = []
 
-for line in all_lines:
+for line in all_lines[1:]:
+    if not line:
+        break
     line = line.strip("\n")
     x.append(int(line.split(',')[0]))
     y.append(int(line.split(',')[1]))
