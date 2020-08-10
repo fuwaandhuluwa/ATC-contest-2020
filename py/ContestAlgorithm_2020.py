@@ -63,8 +63,8 @@ def generateRoadMap(points):
 class AStar:
     def __init__(self, road_map):
         self.roadMap = road_map
-        self.open_set = []
-        self.close_set = []
+        self.open_set = {}
+        self.close_set = {}
         self.max_row = max_row
         self.max_col = max_col
         self.adjacent = [[1, 0], [0, 1], [0, -1], [-1, 0]]
@@ -150,7 +150,7 @@ class AStar:
         start.g_cost = 0
         self.open_set.clear()
         self.close_set.clear()
-        self.open_set.append(start)
+        self.open_set[start] = 1
 
         # rec = Rectangle((start.x, start.y), width=1, height=1, facecolor='b')
         # ax.add_patch(rec)
@@ -165,7 +165,7 @@ class AStar:
             #     break
             #
             # current = self.open_set[index]
-            current = heapq.nsmallest(1, self.open_set, key=lambda point: point.f_cost)[0]
+            current = heapq.nsmallest(1, list(self.open_set), key=lambda point: point.f_cost)[0]
             # rec = Rectangle((current.x, current.y), 1, 1, color='c')
             # ax.add_patch(rec)
             # self.SaveImage(plt)
@@ -181,12 +181,12 @@ class AStar:
                     next.parent = current
                     next.g_cost = current.g_cost + 1
                     next.f_cost = self.fCost(next, target)
-                    self.close_set.append(next)
+                    self.close_set[next] = 1
             else:
                 next = current
 
-            self.open_set.remove(current)
-            self.close_set.append(current)
+            del self.open_set[current]
+            self.close_set[current] = 1
 
             # process all neighbors
             for adjacent in self.adjacent:
@@ -203,7 +203,7 @@ class AStar:
             current.parent = parent
             current.g_cost = self.gCost(current, start)
             current.f_cost = self.fCost(current, target)
-            self.open_set.append(current)
+            self.open_set[current] = 1
             # print('Process Point [', current.x, ',', current.y, ']', ', cost: ', current.cost)
 
     def buildPath(self, point: Point, start: Point, ax, plt):
