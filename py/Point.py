@@ -10,11 +10,19 @@ class Point:
         self.next = None
         self.matched = False
 
-    # overload the less than func for priority queue
+    # overload the less than func
     def __lt__(self, other):
         if self.y < other.y:
             return True
         elif self.x < other.x:
+            return True
+        else:
+            return False
+
+    def __le__(self, other):
+        if self.y <= other.y:
+            return True
+        elif self.x <= other.x:
             return True
         else:
             return False

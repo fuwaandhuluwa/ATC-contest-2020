@@ -1,6 +1,9 @@
 import unittest
 from py.ContestAlgorithm_2020 import run, readFileContent
 
+# Pure data generation need 30 seconds
+# python heap dynamic build is much slower than one-time build
+
 
 class MyTestCase(unittest.TestCase):
     def test_case_1(self):
