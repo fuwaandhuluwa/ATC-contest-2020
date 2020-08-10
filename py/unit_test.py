@@ -51,8 +51,8 @@ class MyTestCase(unittest.TestCase):
     def test_case_16(self):
         self.assertEqual(run(readFileContent('C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/16.in')), 72951)
 
-    # def test_case_17(self):
-    #     self.assertEqual(run(readFileContent('C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/17.in')), 101924)
+    def test_case_17(self):
+        self.assertEqual(run(readFileContent('C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/17.in')), 101924)
 
     def test_case_18(self):
         self.assertEqual(run(readFileContent('C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/18.in')), 149517)
@@ -203,9 +203,6 @@ class MyTestCase(unittest.TestCase):
     def test_case_55(self):
         self.assertEqual(run(readFileContent('C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/55.in')),
                          810595)
-
-
-
 
 if __name__ == '__main__':
     unittest.main()
