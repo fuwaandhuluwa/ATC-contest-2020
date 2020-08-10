@@ -7,6 +7,7 @@ import sys
 from matplotlib.patches import Rectangle
 import matplotlib.pyplot as plt
 import time
+import heapq
 
 max_row = 0
 max_col = 0
@@ -31,7 +32,7 @@ def getFile():
 def generateRoadMap(points):
     global max_row
     global max_col
-    print(points)
+    # print(points)
     for content in points[1:]:
         if not content:
             continue
@@ -98,15 +99,22 @@ class AStar:
         return current.g_cost + self.hCost(current, target)
 
     def isInOpenList(self, current: Point):
-        for i in self.open_set:
-            if i.x == current.x and i.y == current.y:
-                return True
+        # for i in self.open_set:
+        #     if i.x == current.x and i.y == current.y:
+        #         return True
+        # return False
+
+        if current in self.open_set:
+            return True
         return False
 
     def isInCloseList(self, current: Point):
-        for i in self.close_set:
-            if i.x == current.x and i.y == current.y:
-                return True
+        # for i in self.close_set:
+        #     if i.x == current.x and i.y == current.y:
+        #         return True
+        # return False
+        if current in self.close_set:
+            return True
         return False
 
     def isTargetPoint(self, current: Point, target: Point):
@@ -144,19 +152,20 @@ class AStar:
         self.close_set.clear()
         self.open_set.append(start)
 
-        rec = Rectangle((start.x, start.y), width=1, height=1, facecolor='b')
-        ax.add_patch(rec)
-
-        rec = Rectangle((target.x, target.y), width=1, height=1, facecolor='r')
-        ax.add_patch(rec)
+        # rec = Rectangle((start.x, start.y), width=1, height=1, facecolor='b')
+        # ax.add_patch(rec)
+        #
+        # rec = Rectangle((target.x, target.y), width=1, height=1, facecolor='r')
+        # ax.add_patch(rec)
 
         while len(self.open_set) > 0:
-            index = self.selectMinCostPointInOpenList()
-            if index < 0:
-                print('open set is empty! search done.')
-                break
-
-            current = self.open_set[index]
+            # index = self.selectMinCostPointInOpenList()
+            # if index < 0:
+            #     print('open set is empty! search done.')
+            #     break
+            #
+            # current = self.open_set[index]
+            current = heapq.nsmallest(1, self.open_set, key=lambda point: point.f_cost)[0]
             # rec = Rectangle((current.x, current.y), 1, 1, color='c')
             # ax.add_patch(rec)
             # self.SaveImage(plt)
@@ -186,8 +195,8 @@ class AStar:
                     self.ProcessPoint(self.roadMap[next.x + adjacent[0]][next.y + adjacent[1]], next, start, target)
 
     def ProcessPoint(self, current, parent, start, target):
-        if not self.isValidPoint(current.x, current.y):
-            return  # Do nothing for invalid point
+        # if not self.isValidPoint(current.x, current.y):
+        #     return  # Do nothing for invalid point
         if self.isInCloseList(current):
             return  # Do nothing for visited point
         if not self.isInOpenList(current):
@@ -218,10 +227,10 @@ class AStar:
             else:
                 point = point.parent
 
-        for point in path:
-            rec = Rectangle((point.x, point.y), 1, 1, color='g')
-            ax.add_patch(rec)
-            plt.draw()
+        # for point in path:
+        #     rec = Rectangle((point.x, point.y), 1, 1, color='g')
+        #     ax.add_patch(rec)
+        #     plt.draw()
             # self.SaveImage(plt)
 
     def SaveImage(self, plt):
@@ -280,21 +289,21 @@ def run(points):
     Points.clear()
     special_road_map = generateRoadMap(points)
     ax = plt.gca()
-    ax.set_xlim([0, max_row])
-    ax.set_ylim([0, max_col])
+    # ax.set_xlim([0, max_row])
+    # ax.set_ylim([0, max_col])
+    #
+    # for i in range(max_row):
+    #     for j in range(max_col):
+    #         if special_road_map[i][j] is None:
+    #             rec = Rectangle((i, j), width=1, height=1, color='gray')
+    #             ax.add_patch(rec)
+    #         else:
+    #             rec = Rectangle((i, j), width=1, height=1, edgecolor='gray', facecolor='w')
+    #             ax.add_patch(rec)
 
-    for i in range(max_row):
-        for j in range(max_col):
-            if special_road_map[i][j] is None:
-                rec = Rectangle((i, j), width=1, height=1, color='gray')
-                ax.add_patch(rec)
-            else:
-                rec = Rectangle((i, j), width=1, height=1, edgecolor='gray', facecolor='w')
-                ax.add_patch(rec)
-
-    plt.axis('equal')
-    plt.axis('off')
-    plt.tight_layout()
+    # plt.axis('equal')
+    # plt.axis('off')
+    # plt.tight_layout()
     a_star = AStar(special_road_map)
     for i in range(len(Points)):
         if special_road_map[Points[i].x][Points[i].y].matched is True:
@@ -311,11 +320,11 @@ def run(points):
             if special_road_map[i][j] is None:
                 continue
             if special_road_map[i][j].matched is False:
-                print("{}, {}".format(i, j))
+                # print("{}, {}".format(i, j))
                 special_road_map[i][j] = None
             else:
                 next = special_road_map[i][j].next
-                print("{}, {}; {}, {}".format(i, j, next.x, next.y))
+                # print("{}, {}; {}, {}".format(i, j, next.x, next.y))
                 special_road_map[next.x][next.y] = None
                 special_road_map[i][j] = None
             station_number += 1
