@@ -9,6 +9,8 @@ class Point:
         self.g_cost = sys.maxsize
         self.next = None
         self.matched = False
+        self.in_close_set = False
+        self.in_open_set = False
 
     # overload the less than func
     def __lt__(self, other):

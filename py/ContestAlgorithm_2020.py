@@ -103,14 +103,10 @@ class AStar:
         return current.g_cost + self.hCost(current, target)
 
     def isInOpenList(self, current: Point):
-        if current in self.open_set:
-            return True
-        return False
+        return current.in_open_set
 
     def isInCloseList(self, current: Point):
-        if current in self.close_set:
-            return True
-        return False
+        return current.in_close_set
 
     def isTargetPoint(self, current: Point, target: Point):
         if current.x == target.x and current.y == target.y:
@@ -131,11 +127,22 @@ class AStar:
                 min_cost_point = i
         return min_cost_point
 
+    def resetCloseSetPoints(self):
+        for i in list(self.close_set):
+            i.in_close_set = False
+
+    def resetOpenSetPoints(self):
+        for i in list(self.open_set):
+            i.in_open_set = False
+
     def search(self, ax, plt, start: Point, target: Point):
         start.f_cost = 0
         start.g_cost = 0
+        self.resetOpenSetPoints()
         self.open_set.clear()
+        self.resetCloseSetPoints()
         self.close_set.clear()
+        start.in_open_set = True
         self.open_set[start] = 1
 
         # rec = Rectangle((start.x, start.y), width=1, height=1, facecolor='b')
@@ -165,11 +172,14 @@ class AStar:
                     next.parent = current
                     next.g_cost = current.g_cost + 1
                     next.f_cost = self.fCost(next, target)
+                    next.in_close_set = True
                     self.close_set[next] = 1
             else:
                 next = current
 
             del self.open_set[current]
+            current.in_open_set = False
+            current.in_close_set = True
             self.close_set[current] = 1
 
             # process all neighbors
@@ -184,6 +194,7 @@ class AStar:
             current.parent = parent
             current.g_cost = self.gCost(current, start)
             current.f_cost = current.g_cost + self.hCost(current, target)
+            current.in_open_set = True
             self.open_set[current] = 1
             # print('Process Point [', current.x, ',', current.y, ']', ', cost: ', current.cost)
 
@@ -272,4 +283,4 @@ def run(points):
 #
 # cProfile.run('run(readFileContent("C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/54.in"))',
 #              filename='status.txt', sort='cumulative')
-
+#
