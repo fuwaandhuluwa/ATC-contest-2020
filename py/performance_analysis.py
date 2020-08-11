@@ -21,3 +21,10 @@
 
 # below command must be used in shell
 # snakeviz status.txt
+
+
+# from line_profiler import LineProfiler
+# lp = LineProfiler()
+# lp_wrapper = lp(run)
+# lp_wrapper(readFileContent("C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/1.in"))
+# lp.print_stats()
