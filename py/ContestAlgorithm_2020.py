@@ -45,8 +45,8 @@ def generateRoadMap(points):
         if y > max_col:
             max_col = y
 
-    max_row += 1
-    max_col += 1
+    max_row += 2
+    max_col += 2
     road_map = np.ndarray([max_row, max_col], dtype=Point)
     for content in points[1:]:
         if not content:
@@ -76,8 +76,7 @@ class AStar:
                     continue
 
                 for point in self.adjacent:
-                    if self.isValidPoint(i + point[0], j + point[1]) is True \
-                            and self.roadMap[i + point[0]][j + point[1]] is not None \
+                    if self.roadMap[i + point[0]][j + point[1]] is not None \
                             and self.roadMap[i + point[0]][j + point[1]].matched is False:
                         self.roadMap[i][j].next = self.roadMap[i + point[0]][j + point[1]]
                         self.roadMap[i + point[0]][j + point[1]].next = self.roadMap[i][j]
@@ -90,8 +89,14 @@ class AStar:
         return parent.g_cost + 1
 
     def hCost(self, current: Point, target: Point):
-        dx = abs(current.x - target.x)
-        dy = abs(current.y - target.y)
+        dx = current.x - target.x
+        dy = current.y - target.y
+        if dx < 0:
+            dx = 0 - dx
+        if dy < 0:
+            dy = 0 - dy
+        # dx = abs(current.x - target.x)
+        # dy = abs(current.y - target.y)
         return dx + dy
 
     def fCost(self, current: Point, target: Point):
@@ -125,13 +130,6 @@ class AStar:
                 min_cost = i.f_cost
                 min_cost_point = i
         return min_cost_point
-
-    def isValidPoint(self, x, y):
-        if x < 0 or y < 0:
-            return False
-        if x >= self.max_row or y >= self.max_col:
-            return False
-        return True
 
     def search(self, ax, plt, start: Point, target: Point):
         start.f_cost = 0
@@ -176,19 +174,16 @@ class AStar:
 
             # process all neighbors
             for adjacent in self.adjacent:
-                if self.isValidPoint(next.x + adjacent[0], next.y + adjacent[1]) \
-                        and self.roadMap[next.x + adjacent[0]][next.y + adjacent[1]] is not None:
+                if self.roadMap[next.x + adjacent[0]][next.y + adjacent[1]] is not None:
                     self.ProcessPoint(self.roadMap[next.x + adjacent[0]][next.y + adjacent[1]], next, start, target)
 
     def ProcessPoint(self, current, parent, start, target):
-        # if not self.isValidPoint(current.x, current.y):
-        #     return  # Do nothing for invalid point
         if self.isInCloseList(current):
             return  # Do nothing for visited point
         if not self.isInOpenList(current):
             current.parent = parent
             current.g_cost = self.gCost(current, start)
-            current.f_cost = self.fCost(current, target)
+            current.f_cost = current.g_cost + self.hCost(current, target)
             self.open_set[current] = 1
             # print('Process Point [', current.x, ',', current.y, ']', ', cost: ', current.cost)
 
@@ -270,3 +265,11 @@ def run(points):
                 special_road_map[i][j] = None
             station_number += 1
     return station_number
+
+
+# performance analysis
+# import cProfile
+#
+# cProfile.run('run(readFileContent("C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/54.in"))',
+#              filename='status.txt', sort='cumulative')
+

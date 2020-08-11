@@ -1,10 +1,23 @@
 
 
-#   python -m cProfile -s cumtime -o profile.status unit_test.py
-#  -m cProfile: 进行热点分析的选项
-#  -o profile.status: 输出的分析日志文件名，二进制格式
-#  -s cumtime: 指按照消耗时间进行排序
+#   using cProfile library and snakeviz module visualization results
 
-# C:\Users\jiafu.li\AppData\Local\Programs\Python\Python38\python.exe -m cProfile -s cumtime -o profile.status unit_test.py
+#  -------------------------------------------------------------
+#  First step :
+#       using cProfiler to run application
+#  -------------------------------------------------------------
+
+# import cProfile
 #
-# python -c "import pstats; p=pstats.Stats('profile.status'); p.print_stats()"
+# cProfile.run('run(readFileContent("C:/Users/jiafu.li/PyCharmProjects/AStar_Algorithm/testcase/17.in"))',
+#              filename='status.txt', sort='cumulative')
+
+
+#  -------------------------------------------------------------
+#  Second step:
+#        using snakeviz tool to visualize the results and find
+#        out which function takes up more resources
+#  -------------------------------------------------------------
+
+# below command must be used in shell
+# snakeviz status.txt
