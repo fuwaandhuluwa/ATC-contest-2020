@@ -20,10 +20,6 @@ def generateRoadMap(points):
     global max_row
     global max_col
     for content in points:
-        if not content:
-            continue
-        if len(content) == 1:
-            continue
         x = int(content[0])
         y = int(content[1])
         if x > max_row:
@@ -35,10 +31,6 @@ def generateRoadMap(points):
     max_col += 2
     road_map = [[None for i in range(0,max_col)] for j in range(0,max_row)]
     for content in points:
-        if not content:
-            continue
-        if len(content) == 1:
-            continue
         x = int(content[0])
         y = int(content[1])
         road_map[x][y] = Point(x, y)
@@ -188,7 +180,7 @@ def run(points):
                 special_road_map[next.x][next.y] = None
                 special_road_map[i][j] = None
             stations_list.append(station)
-    print(stations_list)
+    # print(stations_list)
     return stations_list
 
 
